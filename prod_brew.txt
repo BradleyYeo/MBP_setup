@@ -3,6 +3,7 @@ alfred
 anime-downloader
 chrome
 karabiner-elements
+mas
 macdown
 netnewswire
 notion
