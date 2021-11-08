@@ -1,0 +1,16 @@
+alexjs
+alfred
+anime-downloader
+chrome
+karabiner-elements
+macdown
+netnewswire
+notion
+notion
+numi
+rectangle
+telegram
+thinkorswim
+xbar
+youtube-dl
+zoom
