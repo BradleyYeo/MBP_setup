@@ -1,4 +1,7 @@
-# MBP_setup
+# MBP M1 Pro Setup
 
-Laptop setup
-xargs brew install < brew.txt
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+brew install wget
+
+brew install cask
