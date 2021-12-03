@@ -2,14 +2,17 @@ from pathlib import Path
 
 folder_to_sort = Path("/Users/bradleyyeo/Downloads")
 file_folder_mapping = {
-    ".png": "images",
-    ".jpg": "images",
-    ".jpeg": "images",
-    ".JPG": "images",
-    ".pdf": "pdfs",
-    ".mp4": "videos",
-    ".mp3": "audio",
-    ".zip": "bundles",
+    ".png": "Pics",
+    ".jpg": "Pics",
+    ".jpeg": "Pics",
+    ".JPG": "Pics",
+    ".pdf": "PDFs",
+    ".mp4": "Videos",
+    ".mp3": "Music",
+    ".zip": "Bundles",
+    ".epub": "Books",
+    ".csv": "Excel",
+    ".xlsx": "Excel",
 }
 for file in folder_to_sort.glob("*"):
     ext = file.suffix
