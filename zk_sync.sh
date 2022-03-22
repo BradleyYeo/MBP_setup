@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 ZK_PATH="/Users/bradleyyeo/Documents/Obsidian"
 
 cd "$ZK_PATH"
