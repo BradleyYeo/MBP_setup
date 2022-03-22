@@ -2,17 +2,17 @@ from pathlib import Path
 
 folder_to_sort = Path("/Users/bradleyyeo/Downloads")
 file_folder_mapping = {
-    ".png": "Pics",
-    ".jpg": "Pics",
-    ".jpeg": "Pics",
-    ".JPG": "Pics",
+    ".png": "pictures",
+    ".jpg": "pictures",
+    ".jpeg": "pictures",
+    ".JPG": "pictures",
     ".pdf": "PDFs",
-    ".mp4": "Videos",
-    ".mp3": "Music",
+    ".mp4": "videos",
+    ".mp3": "music",
     ".zip": "Bundles",
-    ".epub": "Books",
-    ".csv": "Excel",
-    ".xlsx": "Excel",
+    ".epub": "books",
+    ".csv": "excel",
+    ".xlsx": "excel",
     ".pptx": "slides",
     ".ppt": "slides",
     ".docx": "word"
