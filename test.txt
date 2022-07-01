@@ -18,7 +18,6 @@ multiple share classes. This can be
 done through the Vanguard S&P 500
 ETF (VOO).
 Figure 1
-
 My research will use the pytrends API from 1 January 2020 to 1 January 2021 in Singapore. I
 predict interest in STI to be the highest in January and July as these are the months when the
 STI ETF pays their dividend. Also, interest in January should be highest as I think many people
