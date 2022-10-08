@@ -15,7 +15,8 @@ file_folder_mapping = {
     ".xlsx": "excel",
     ".pptx": "slides",
     ".ppt": "slides",
-    ".docx": "word"
+    ".docx": "word",
+    ".pem": "credentials"
 }
 for file in folder_to_sort.glob("*"):
     ext = file.suffix
