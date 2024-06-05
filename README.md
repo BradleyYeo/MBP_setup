@@ -9,3 +9,5 @@ brew install cask
 https://sourabhbajaj.com/mac-setup/iTerm/zsh.html
 
 https://medium.com/swlh/the-ultimate-terminal-emulator-with-oh-my-zsh-experience-f81f838c6daf
+
+- [Configure osx defaults](https://macos-defaults.com/desktop/createdesktop.html)
