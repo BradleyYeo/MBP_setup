@@ -20,8 +20,3 @@
 
 - name: Install packages from Brewfile
   shell: brew bundle --file=/tmp/Brewfile
-
-- name: Clean up temporary Brewfile
-  file:
-    path: /tmp/Brewfile
-    state: absent
