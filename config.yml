@@ -1,0 +1,109 @@
+---
+configure_dotfiles: true
+configure_terminal: true
+configure_osx: true
+
+configure_dock: false
+dockitems_remove: all
+
+dotfiles_repo: https://github.com/BradleyYeo/dotfiles.git
+dotfiles_repo_accept_hostkey: true
+dotfiles_repo_local_destination: ~/dotfiles
+dotfiles_files:
+  - .zshrc
+  - .macos
+  - .vimrc
+  - .gitconfig
+  - .gitignore
+  - .githelpers
+
+homebrew_installed_packages:
+  - codecrafters-io/tap/codecrafters
+  - arm-none-eabi-gcc
+  - arm-none-eabi-gdb
+  - awk
+  - aws-vault
+  - awscli
+  - azure-cli
+  - checkov
+  - d2
+  - docker-machine
+  - etcd
+  - fzf
+  - gh
+  - git
+  - git-gui
+  - git-lfs
+  - git-open
+  - git-recent
+  - gnupg
+  - go
+  - gperftools
+  - graphviz
+  - hadolint
+  - hexyl
+  - htop
+  - infracost
+  - inframap
+  - ipcalc
+  - iproute2mac
+  - jq
+  - jupyterlab
+  - kind
+  - kubernetes-cli
+  - libpcap
+  - lima
+  - llvm
+  - maven
+  - minikube
+  - mysql
+  - node
+  - openjdk
+  - openssl@3
+  - postgresql@14
+  - pre-commit
+  - pyenv
+  - ripgrep
+  - semgrep
+  - shellcheck
+  - shfmt
+  - suricata
+  - tailscale
+  - terraform-docs
+  - tfenv
+  - tflint
+  - tfsec
+  - tfupdate
+  - tldr
+  - tmux
+  - tree
+  - trivy
+  - wget
+  - wireshark
+  - xz
+  - yamllint
+  - yq
+
+homebrew_cask_apps:
+  - anki
+  - arc
+  - chatgpt
+  - cloudflare-warp
+  - discord
+  - docker
+  - drawio
+  - google-chrome
+  - iterm2
+  - logitech-options
+  - microsoft-auto-update
+  - monitorcontrol
+  - mysqlworkbench
+  - notion
+  - obsidian
+  - slack
+  - telegram
+  - trunk-io
+  - visual-studio-code
+  - whatsapp
+  - wireshark-chmodbpf
+  - zoom

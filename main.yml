@@ -1,0 +1,55 @@
+---
+- name: Configure host.
+  hosts: all
+
+  vars_files:
+    - config.yml
+
+  pre_tasks:
+    - name: Include playbook configuration.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ['always']
+  roles:
+    - role: elliotweiser.osx-command-line-tools
+    - role: bradleyyeo.mac.homebrew
+      tags: ['homebrew']
+    - role: bradleyyeo.dotfiles
+      when: configure_dotfiles
+      tags: ['dotfiles']
+
+  tasks:
+    - import_tasks: tasks/brew.yml
+      name: Ensure Homebrew is installed
+      homebrew:
+        state: present
+
+    - name: Download Oh My Zsh installation script
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install_ohmyzsh.sh
+
+    - name: Run Oh My Zsh installation script
+      command: sh /tmp/install_ohmyzsh.sh --unattended
+      register: ohmyzsh_result
+      failed_when: "'FAILED' in ohmyzsh_result.stderr"
+
+    - name: Clone the dotfiles repository
+      git:
+        repo: 'https://github.com/BradleyYeo/dotfiles.git'
+        dest: '~/dotfiles'
+        update: yes
+
+    - name: Read the Brewfile
+      slurp:
+        src: '~/dotfiles/Brewfile'
+      register: brewfile_content
+
+    - name: Create a temporary Brewfile
+      copy:
+        content: "{{ brewfile_content.content | b64decode }}"
+        dest: '/tmp/Brewfile'
+
+    - name: Install packages from Brewfile
+      shell: brew bundle --file=/tmp/Brewfile
