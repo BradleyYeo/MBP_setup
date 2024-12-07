@@ -20,8 +20,7 @@
       tags: ['dotfiles']
 
   tasks:
-    - import_tasks: tasks/brew.yml
-      name: Ensure Homebrew is installed
+    - name: Ensure Homebrew is installed
       homebrew:
         state: present
 
