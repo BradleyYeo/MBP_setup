@@ -1,0 +1,21 @@
+---
+- name: Ensure Documents directory exists
+  ansible.builtin.file:
+    path: ~/Documents
+    state: directory
+
+- name: Clone private repositories using GitHub CLI
+  # Using `creates` ensures this only runs if the directory doesn't exist, making it idempotent
+  ansible.builtin.command:
+    cmd: "gh repo clone {{ item.repo }} {{ item.dest }}"
+    creates: "{{ item.dest }}"
+  loop: "{{ github_repos_to_clone }}"
+
+- name: Pull latest changes for existant repositories
+  ansible.builtin.command:
+    cmd: "git pull"
+    chdir: "{{ item.dest }}"
+  loop: "{{ github_repos_to_clone }}"
+  register: git_pull_result
+  changed_when: "'Already up to date.' not in git_pull_result.stdout"
+  ignore_errors: true

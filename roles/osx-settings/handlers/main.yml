@@ -1,0 +1,5 @@
+---
+- name: Restart SystemUIServer
+  ansible.builtin.shell: killall SystemUIServer
+  ignore_errors: yes
+  changed_when: false

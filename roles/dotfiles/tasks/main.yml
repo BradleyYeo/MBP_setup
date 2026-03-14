@@ -1,0 +1,28 @@
+---
+- name: Ensure dotfiles repository is cloned using GitHub CLI
+  ansible.builtin.command:
+    cmd: "gh repo clone {{ dotfiles_repo }} {{ dotfiles_repo_local_destination }}"
+    creates: "{{ dotfiles_repo_local_destination }}"
+
+- name: Pull latest changes for dotfiles repository
+  ansible.builtin.command:
+    cmd: "git pull"
+    chdir: "{{ dotfiles_repo_local_destination }}"
+  register: git_pull_result
+  changed_when: "'Already up to date.' not in git_pull_result.stdout"
+  ignore_errors: true
+
+- name: Check if dotfile destinations already exist
+  ansible.builtin.stat:
+    path: "~/{{ item }}"
+  register: dotfiles_stat
+  loop: "{{ dotfiles_files }}"
+
+- name: Create symlinks for dotfiles
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/{{ item.item }}"
+    dest: "~/{{ item.item }}"
+    state: link
+    follow: false
+  loop: "{{ dotfiles_stat.results }}"
+  when: not item.stat.exists

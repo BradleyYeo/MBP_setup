@@ -1,0 +1,11 @@
+---
+- name: Install packages from Brewfile
+  ansible.builtin.command: brew bundle --file="{{ playbook_dir }}/Brewfile"
+  register: homebrew_bundle_result
+  changed_when: "'Installing' in homebrew_bundle_result.stdout or 'Upgrading' in homebrew_bundle_result.stdout"
+
+- name: Update and upgrade all homebrew packages
+  community.general.homebrew:
+    update_homebrew: yes
+    upgrade_all: yes
+  when: homebrew_bundle_result is changed

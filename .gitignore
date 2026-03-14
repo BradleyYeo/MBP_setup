@@ -1,4 +1,16 @@
-*.vagrant
-.DS_Store
+# Ansible specific
 *.retry
-roles*
+*.pyc
+.ansible/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore specifically downloaded third-party roles (DO NOT ignore your custom ones)
+roles/elliotweiser.osx-command-line-tools/
