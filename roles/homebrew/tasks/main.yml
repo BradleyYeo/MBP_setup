@@ -1,8 +1,8 @@
 ---
-- name: Install packages from Brewfile
-  ansible.builtin.command: brew bundle --file="{{ playbook_dir }}/Brewfile"
+- name: Install and Cleanup packages from Brewfile
+  ansible.builtin.command: brew bundle --file="{{ playbook_dir }}/Brewfile" --cleanup
   register: homebrew_bundle_result
-  changed_when: "'Installing' in homebrew_bundle_result.stdout or 'Upgrading' in homebrew_bundle_result.stdout"
+  changed_when: "'Installing' in homebrew_bundle_result.stdout or 'Upgrading' in homebrew_bundle_result.stdout or 'Uninstalling' in homebrew_bundle_result.stdout"
 
 - name: Update and upgrade all homebrew packages
   community.general.homebrew:
