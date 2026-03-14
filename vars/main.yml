@@ -22,3 +22,5 @@ github_repos_to_clone:
     dest: "~/Documents/Personal"
   - repo: "BradleyYeo/Work"
     dest: "~/Documents/Work"
+  - repo: "BradleyYeo/Visualise_Value"
+    dest: "~/Documents/Visualise_Value"

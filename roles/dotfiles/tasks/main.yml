@@ -24,5 +24,6 @@
     dest: "~/{{ item.item }}"
     state: link
     follow: false
+    force: yes
   loop: "{{ dotfiles_stat.results }}"
   when: not item.stat.exists
