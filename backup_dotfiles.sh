@@ -10,6 +10,8 @@ DOTFILES_FILES=(
   ".inputrc"
   ".macos"
   ".vimrc"
+  ".aerospace.toml"
+  ".gemini"
 )
 
 echo "Backing up dotfiles to $DOTFILES_LOCAL_REPO..."
@@ -18,9 +20,9 @@ echo "Backing up dotfiles to $DOTFILES_LOCAL_REPO..."
 mkdir -p "$DOTFILES_LOCAL_REPO"
 
 for file in "${DOTFILES_FILES[@]}"; do
-  if [ -f "$HOME/$file" ]; then
+  if [ -e "$HOME/$file" ]; then
     echo "Copying $file..."
-    cp "$HOME/$file" "$DOTFILES_LOCAL_REPO/"
+    cp -R "$HOME/$file" "$DOTFILES_LOCAL_REPO/"
   else
     echo "Skipping $file (not found in home directory)."
   fi
