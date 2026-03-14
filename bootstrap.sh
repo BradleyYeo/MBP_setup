@@ -10,7 +10,7 @@ echo "Starting Minimal Bootstrap..."
 if ! command -v brew &>/dev/null; then
   echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  
+
   # Add Homebrew to PATH for the current shell session
   if [[ $(uname -m) == "arm64" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -31,7 +31,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # Install a stable Python version and set it as global
-PYTHON_VERSION="3.12.0"
+PYTHON_VERSION="3.14.0"
 if ! pyenv versions --bare | grep -q "^${PYTHON_VERSION}$"; then
   echo "Installing Python ${PYTHON_VERSION} via pyenv..."
   pyenv install "${PYTHON_VERSION}"

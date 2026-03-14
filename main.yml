@@ -13,3 +13,4 @@
     - role: dotfiles
     - role: osx-settings
     - role: cli-tools
+    - role: clone-repos

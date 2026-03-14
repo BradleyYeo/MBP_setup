@@ -15,3 +15,10 @@ dotfiles_files:
 
 # Homebrew configuration (optional, most apps are in Brewfile)
 homebrew_cask_appdir: /Applications
+
+# Repositories to clone
+github_repos_to_clone:
+  - repo: "BradleyYeo/Obsidian"
+    dest: "~/Documents/Personal"
+  - repo: "BradleyYeo/Work"
+    dest: "~/Documents/Work"
