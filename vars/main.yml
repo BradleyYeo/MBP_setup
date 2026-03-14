@@ -1,0 +1,16 @@
+---
+# Dotfiles configuration
+dotfiles_repo: https://github.com/BradleyYeo/dotfiles
+dotfiles_repo_local_destination: ~/repositories/dotfiles
+dotfiles_files:
+  - .zshrc
+  - .gitignore
+  - .gitconfig
+  - .githelpers
+  - .inputrc
+  - .macos
+  - .vimrc
+  - .aersospace.toml
+
+# Homebrew configuration (optional, most apps are in Brewfile)
+homebrew_cask_appdir: /Applications
