@@ -30,8 +30,10 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-# Install a stable Python version and set it as global
-PYTHON_VERSION="3.14.0"
+# Dynamically get the latest stable Python 3 version
+PYTHON_VERSION=$(pyenv install --list | grep -E '^\s*3\.[0-9]+\.[0-9]+$' | tail -1 | tr -d ' ')
+
+# Install the latest Python version and set it as global
 if ! pyenv versions --bare | grep -q "^${PYTHON_VERSION}$"; then
   echo "Installing Python ${PYTHON_VERSION} via pyenv..."
   pyenv install "${PYTHON_VERSION}"
@@ -39,10 +41,9 @@ fi
 pyenv global "${PYTHON_VERSION}"
 
 # Install ansible via pip
-if ! command -v ansible &>/dev/null; then
-  echo "Installing Ansible via pip..."
-  pip install ansible
-fi
+echo "Installing Ansible (ansible, ansible-galaxy, ansible-playbook) via pip..."
+python -m pip install --upgrade pip
+python -m pip install ansible
 
 # 3. Install required Ansible roles and collections
 echo "Installing Ansible requirements..."
