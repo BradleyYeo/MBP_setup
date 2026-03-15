@@ -33,6 +33,13 @@
     state: directory
     mode: "0755"
 
+- name: Count local wallpapers
+  ansible.builtin.find:
+    # Using the robust absolute path we established earlier
+    paths: "{{ lookup('env', 'HOME') }}/Documents/Wallpapers"
+    patterns: "*.jpg,*.jpeg,*.png"
+  register: local_wallpapers
+
 - name: List all objects in the wallpapers bucket
   amazon.aws.s3_object_info:
     bucket_name: wallpapers
@@ -55,3 +62,4 @@
   loop: "{{ r2_files.s3_keys }}"
   loop_control:
     label: "{{ item }}"
+  when: local_wallpapers.matched != (r2_files.s3_keys | length)

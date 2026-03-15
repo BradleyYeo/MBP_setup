@@ -34,16 +34,3 @@
   failed_when:
     - browser_result.rc != 0
     - "'unknown' in browser_result.stderr"
-
-# --- WALLPAPER CONFIGURATION ---
-- name: Get a list of downloaded wallpapers
-  ansible.builtin.find:
-    paths: "~/Documents/Wallpapers"
-    patterns: "*.jpg,*.jpeg,*.png"
-  register: available_wallpapers
-
-- name: Set desktop wallpaper (Picks the first one to establish baseline)
-  ansible.builtin.command: "wallpaper set '{{ available_wallpapers.files[0].path }}'"
-  when: available_wallpapers.matched > 0
-  # We suppress the changed state here because the CLI doesn't easily return current state
-  changed_when: false
