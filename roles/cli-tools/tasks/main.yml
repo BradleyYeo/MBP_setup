@@ -14,9 +14,16 @@
   ignore_errors: true
 
 - name: Install Oh My Zsh
-  ansible.builtin.shell: 
+  ansible.builtin.shell:
     cmd: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
     creates: ~/.oh-my-zsh
   environment:
     RUNZSH: 'no'
     CHSH: 'no'
+
+- name: Restore .zshrc symlink after Oh My Zsh installation
+  ansible.builtin.file:
+    src: "{{ dotfiles_repo_local_destination }}/.zshrc"
+    dest: "~/.zshrc"
+    state: link
+    force: yes

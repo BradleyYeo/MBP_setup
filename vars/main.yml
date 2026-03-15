@@ -25,4 +25,4 @@ github_repos_to_clone:
   - repo: "BradleyYeo/Visualise_Value"
     dest: "~/Documents/Visualise_Value"
   - repo: "BradleyYeo/dotfiles"
-    dest: "~/Documents/dotfiles"
+    dest: "~/dotfiles"
