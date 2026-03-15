@@ -1,7 +1,7 @@
 ---
 # Dotfiles configuration
 dotfiles_repo: https://github.com/BradleyYeo/dotfiles
-dotfiles_repo_local_destination: ~/repositories/dotfiles
+dotfiles_repo_local_destination: ~/dotfiles
 dotfiles_files:
   - .zshrc
   - .gitignore
@@ -24,3 +24,5 @@ github_repos_to_clone:
     dest: "~/Documents/Work"
   - repo: "BradleyYeo/Visualise_Value"
     dest: "~/Documents/Visualise_Value"
+  - repo: "BradleyYeo/dotfiles"
+    dest: "~/Documents/dotfiles"
