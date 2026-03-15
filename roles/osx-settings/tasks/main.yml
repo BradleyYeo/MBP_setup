@@ -25,3 +25,25 @@
     value: 1
     state: present
   notify: Restart SystemUIServer
+
+- name: Set Dia as the default browser
+  ansible.builtin.command: defaultbrowser dia
+  register: browser_result
+  # defaultbrowser outputs the current state, so we can make this idempotent
+  changed_when: "'already set' not in browser_result.stdout"
+  failed_when:
+    - browser_result.rc != 0
+    - "'unknown' in browser_result.stderr"
+
+# --- WALLPAPER CONFIGURATION ---
+- name: Get a list of downloaded wallpapers
+  ansible.builtin.find:
+    paths: "~/Documents/Wallpapers"
+    patterns: "*.jpg,*.jpeg,*.png"
+  register: available_wallpapers
+
+- name: Set desktop wallpaper (Picks the first one to establish baseline)
+  ansible.builtin.command: "wallpaper set '{{ available_wallpapers.files[0].path }}'"
+  when: available_wallpapers.matched > 0
+  # We suppress the changed state here because the CLI doesn't easily return current state
+  changed_when: false
