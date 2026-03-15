@@ -5,7 +5,6 @@
     state: directory
 
 - name: Clone private repositories using GitHub CLI
-  # Using `creates` ensures this only runs if the directory doesn't exist, making it idempotent
   ansible.builtin.command:
     cmd: "gh repo clone {{ item.repo }} {{ item.dest }}"
     creates: "{{ item.dest }}"
@@ -23,37 +22,36 @@
 - name: Install all project dependencies
   ansible.builtin.pip:
     requirements: "{{ playbook_dir }}/requirements.txt"
-    
+
+- name: Load encrypted secrets
+  ansible.builtin.include_vars:
+    file: vars/secrets.yml
+
+- name: Create wallpapers directory
+  ansible.builtin.file:
+    path: "~/Documents/Wallpapers"
+    state: directory
+    mode: "0755"
+
+- name: List all objects in the wallpapers bucket
+  amazon.aws.s3_object_info:
+    bucket_name: wallpapers
+    access_key: "{{ vault_r2_access_key }}"
+    secret_key: "{{ vault_r2_secret_key }}"
+    endpoint_url: https://{{ vault_account_id }}.r2.cloudflarestorage.com
+    region: "auto"
+  register: r2_files
+
 - name: Sync wallpapers from Object Storage
   amazon.aws.s3_object:
     bucket: wallpapers
-    object: "/wallpapers/{{ item }}"
+    object: "{{ item }}"
     dest: "~/Documents/Wallpapers/{{ item }}"
     mode: get
-    # Use environment variables for secrets, never hardcode!
-    access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-    secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-    endpoint_url: https://346e5692ae2024c494ef5f58c36fae37.r2.cloudflarestorage.com
-  loop:
-    - Adversity-Prosperity.jpeg
-    - Assemble.jpeg
-    - Bad Decisions.png
-    - Caterpillar.jpeg
-    - Compound_your_interest.png
-    - Days.png
-    - DoLess.png
-    - Excellence.jpeg
-    - Experience.jpeg
-    - Goggins.jpeg
-    - Improvement.png
-    - Luck.png
-    - Pain.jpeg
-    - Pointless.jpeg
-    - Practice.jpeg
-    - Shoot.jpeg
-    - Teacher.png
-    - Trying.jpeg
-    - Weigh_Words.jpeg
-    - Who-stays.png
-    - Worldview.jpeg
-    - sentiment.png
+    access_key: "{{ vault_r2_access_key }}"
+    secret_key: "{{ vault_r2_secret_key }}"
+    endpoint_url: https://{{ vault_account_id }}.r2.cloudflarestorage.com
+    region: "auto"
+  loop: "{{ r2_files.s3_keys }}"
+  loop_control:
+    label: "{{ item }}"
