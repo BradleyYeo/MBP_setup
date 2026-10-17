@@ -1,5 +1,5 @@
 # Repositories to clone
-github_repos_to_clone:
+clone_repos_github_repos:
   - repo: "BradleyYeo/Obsidian"
     dest: "~/Documents/Personal"
   - repo: "BradleyYeo/Work"

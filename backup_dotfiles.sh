@@ -1,7 +1,8 @@
 #!/bin/bash
 # Script to backup current dotfiles to the repository
 
-DOTFILES_LOCAL_REPO="$HOME/repositories/dotfiles"
+DOTFILES_LOCAL_REPO="$HOME/dotfiles"
+
 DOTFILES_FILES=(
   ".zshrc"
   ".gitignore"

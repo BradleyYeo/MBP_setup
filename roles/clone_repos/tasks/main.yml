@@ -8,7 +8,7 @@
   ansible.builtin.command:
     cmd: "gh repo clone {{ item.repo }} {{ item.dest }}"
     creates: "{{ item.dest }}"
-  loop: "{{ github_repos_to_clone }}"
+  loop: "{{ clone_repos_github_repos }}"
 
 - name: Pull latest changes for existing repositories
   ansible.builtin.command:

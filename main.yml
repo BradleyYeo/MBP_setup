@@ -7,6 +7,6 @@
     - role: elliotweiser.osx-command-line-tools
     - role: homebrew
     - role: dotfiles
-    - role: clone-repos
-    - role: cli-tools
-    - role: osx-settings
+    - role: clone_repos
+    - role: cli_tools
+    - role: osx_settings
