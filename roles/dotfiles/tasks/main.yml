@@ -1,17 +1,21 @@
 ---
+- name: Clone dotfiles repository
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dest }}"
+    version: main
+    update: false
 
-- name: Check if dotfile destinations already exist
+- name: Inspect existing dotfile destinations
   ansible.builtin.stat:
-    path: "~/{{ item }}"
+    path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
   register: dotfiles_stat
   loop: "{{ dotfiles_files }}"
 
-- name: Create symlinks for dotfiles
+- name: Create dotfile symlinks
   ansible.builtin.file:
-    src: "{{ dotfiles_repo_local_destination }}/{{ item.item }}"
-    dest: "~/{{ item.item }}"
+    src: "{{ dotfiles_dest }}/{{ item }}"
+    dest: "{{ ansible_facts['user_dir'] }}/{{ item }}"
     state: link
-    follow: false
-    force: yes
-  loop: "{{ dotfiles_stat.results }}"
-  when: not item.stat.exists
+    force: true
+  loop: "{{ dotfiles_files }}"

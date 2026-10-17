@@ -1,7 +1,6 @@
 ---
-# Dotfiles configuration
-dotfiles_repo: https://github.com/BradleyYeo/dotfiles
-dotfiles_repo_local_destination: ~/dotfiles
+dotfiles_repo: https://github.com/BradleyYeo/dotfiles.git
+dotfiles_dest: "{{ ansible_facts['user_dir'] }}/dotfiles"
 dotfiles_files:
   - .zshrc
   - .gitignore
@@ -11,4 +10,3 @@ dotfiles_files:
   - .macos
   - .vimrc
   - .aerospace.toml
-  

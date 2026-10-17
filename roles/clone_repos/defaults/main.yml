@@ -4,5 +4,3 @@ clone_repos_github:
     dest: "~/Documents/Personal"
   - repo: "BradleyYeo/Work"
     dest: "~/Documents/Work"
-  - repo: "BradleyYeo/dotfiles"
-    dest: "~/dotfiles"
