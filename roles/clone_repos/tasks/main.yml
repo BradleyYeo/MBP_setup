@@ -5,23 +5,10 @@
     state: directory
 
 - name: Clone private repositories using GitHub CLI
-  ansible.builtin.command:
+  ansible.builtin.git:
     cmd: "gh repo clone {{ item.repo }} {{ item.dest }}"
     creates: "{{ item.dest }}"
   loop: "{{ clone_repos_github }}"
-
-- name: Pull latest changes for existing repositories
-  ansible.builtin.command:
-    cmd: "git pull"
-    chdir: "{{ item.dest }}"
-  loop: "{{ clone_repos_github }}"
-  register: git_pull_result
-  changed_when: "'Already up to date.' not in git_pull_result.stdout"
-  ignore_errors: true
-
-- name: Install all project dependencies
-  ansible.builtin.pip:
-    requirements: "{{ playbook_dir }}/requirements.txt"
 
 - name: Load encrypted secrets
   ansible.builtin.include_vars:
