@@ -5,19 +5,28 @@
 set -euo pipefail
 
 echo "Starting Minimal Bootstrap..."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-# 1. Install Homebrew if not already installed
+# 1. Initialize Homebrew on PATH if already installed
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x "/usr/local/bin/brew" ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# Install Homebrew only if missing on disk and PATH
 if ! command -v brew &>/dev/null; then
-  echo "Installing Homebrew..."
+  echo "Installing Homebrew (and Apple Command Line Tools)..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-  # Add Homebrew to PATH for the current shell session
   if [[ $(uname -m) == "arm64" ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   else
     eval "$(/usr/local/bin/brew shellenv)"
   fi
 fi
+
 
 # 2. Install Pyenv -> Python -> Ansible
 if ! command -v pyenv &>/dev/null; then
@@ -27,7 +36,6 @@ fi
 
 # Configure pyenv for the current script session
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 PYTHON_VERSION=$(cat .python-version | tr -d '[:space:]')
