@@ -1,0 +1,13 @@
+---
+# Dotfiles configuration
+dotfiles_repo: https://github.com/BradleyYeo/dotfiles
+dotfiles_repo_local_destination: ~/dotfiles
+dotfiles_files:
+  - .zshrc
+  - .gitignore
+  - .gitconfig
+  - .githelpers
+  - .inputrc
+  - .macos
+  - .vimrc
+  - .aerospace.toml
