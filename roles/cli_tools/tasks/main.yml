@@ -1,18 +1,4 @@
 ---
-- name: Check if Google Gemini CLI is already installed
-  ansible.builtin.command: which gemini
-  register: gemini_check
-  failed_when: false
-  changed_when: false
-
-- name: Install Google Gemini CLI globally via npm
-  community.general.npm:
-    name: "@google/gemini-cli"
-    global: true
-    state: present
-  when: gemini_check.rc != 0
-  ignore_errors: true
-
 - name: Install Oh My Zsh
   ansible.builtin.shell:
     cmd: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
@@ -35,7 +21,7 @@
 
 - name: Restore .zshrc symlink after Oh My Zsh installation
   ansible.builtin.file:
-    src: "{{ dotfiles_repo_local_destination }}/.zshrc"
+    src: "{{ dotfiles_dest }}/.zshrc"
     dest: "~/.zshrc"
     state: link
     force: yes
