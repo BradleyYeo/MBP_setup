@@ -4,10 +4,10 @@
     path: ~/Documents
     state: directory
 
-- name: Clone private repositories using GitHub CLI
+- name: Clone private repositories
   ansible.builtin.git:
-    cmd: "gh repo clone {{ item.repo }} {{ item.dest }}"
-    creates: "{{ item.dest }}"
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
   loop: "{{ clone_repos_github }}"
 
 - name: Load encrypted secrets
