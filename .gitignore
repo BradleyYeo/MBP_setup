@@ -13,7 +13,6 @@ ehthumbs.db
 Thumbs.db
 
 # Ignore specifically downloaded third-party roles (DO NOT ignore your custom ones)
-roles/elliotweiser.osx-command-line-tools/
 .env
 .venv/
 
