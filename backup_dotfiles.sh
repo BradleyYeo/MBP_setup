@@ -11,7 +11,6 @@ DOTFILES_FILES=(
   ".macos"
   ".vimrc"
   ".aerospace.toml"
-  ".gemini"
 )
 
 echo "Backing up dotfiles to $DOTFILES_LOCAL_REPO..."
