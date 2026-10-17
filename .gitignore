@@ -18,3 +18,5 @@ roles/elliotweiser.osx-command-line-tools/
 .venv/
 
 EXERCISES.md
+collections/
+galaxy_roles/

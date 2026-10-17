@@ -11,7 +11,6 @@ dotfiles_files:
   - .macos
   - .vimrc
   - .aerospace.toml
-  - .gemini
 
 # Homebrew configuration (optional, most apps are in Brewfile)
 homebrew_cask_appdir: /Applications

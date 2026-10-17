@@ -2,7 +2,7 @@
 # Bootstrap script for brand new MacBook setup
 # Goal: Provide Minimal Viable Environment (MVE) for Ansible
 
-set -e
+set -euo pipefail
 
 echo "Starting Minimal Bootstrap..."
 
@@ -30,7 +30,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-YTHON_VERSION=$(cat .python-version | tr -d '[:space:]')
+PYTHON_VERSION=$(cat .python-version | tr -d '[:space:]')
 if ! pyenv versions --bare | grep -q "^${PYTHON_VERSION}$"; then
   echo "Installing Python ${PYTHON_VERSION} via pyenv..."
   pyenv install "${PYTHON_VERSION}"
