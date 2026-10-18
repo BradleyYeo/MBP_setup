@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bootstrap script for brand new MacBook setup
-# Goal: Provide Minimal Viable Environment (MVE) for Ansible
+# Goal: Provide Environment for Ansible playbook to automatically setup macbook
 
 set -euo pipefail
 
@@ -58,6 +58,5 @@ echo "Installing Ansible requirements..."
 # 4. Run the Ansible playbook
 echo "Running the Ansible playbook..."
 .venv/bin/ansible-playbook main.yml --ask-become-pass "$@"
-
 
 echo "Setup complete!"
