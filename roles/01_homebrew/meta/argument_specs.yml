@@ -1,0 +1,16 @@
+---
+argument_specs:
+  main:
+    short_description: Manage Homebrew packages and dependencies via Brewfile
+    description:
+      - Installs packages and applications declared in Brewfile using Homebrew bundle.
+    options:
+      homebrew_brewfile:
+        type: path
+        required: false
+        description: Path to the target Brewfile.
+      homebrew_cleanup:
+        type: bool
+        required: false
+        default: false
+        description: Whether to uninstall packages and casks not listed in the Brewfile.
