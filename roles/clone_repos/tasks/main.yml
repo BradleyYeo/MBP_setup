@@ -50,4 +50,3 @@
   loop_control:
     label: "{{ item }}"
   when: clone_repos_local_wallpapers.matched != (clone_repos_r2_files.s3_keys | length)
-  

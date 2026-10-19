@@ -8,16 +8,11 @@
     CHSH: 'no'
     KEEP_ZSHRC: 'yes'
 
-- name: Install zsh-syntax-highlighting plugin
+- name: Install zsh plugins
   ansible.builtin.git:
-    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-    dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    repo: "{{ item.repo }}"
+    dest: "~/.oh-my-zsh/custom/plugins/{{ item.name }}"
     depth: 1
-
-- name: Install fast-syntax-highlighting plugin
-  ansible.builtin.git:
-    repo: https://github.com/zdharma-continuum/fast-syntax-highlighting.git
-    dest: ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
-    depth: 1
-
-    
+  loop: "{{ cli_tools_zsh_plugins }}"
+  loop_control:
+    label: "{{ item.name }}"
