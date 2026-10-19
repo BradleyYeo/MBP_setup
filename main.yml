@@ -4,8 +4,8 @@
   gather_facts: true
 
   roles:
-    - role: homebrew
-    - role: dotfiles
-    - role: clone_repos
-    - role: cli_tools
-    - role: osx_settings
+    - role: 01_homebrew
+    - role: 02_dotfiles
+    - role: 03_clone_repos
+    - role: 04_cli_tools
+    - role: 05_osx_settings
