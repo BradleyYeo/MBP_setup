@@ -28,9 +28,9 @@
 
 - name: Set Dia as the default browser
   ansible.builtin.command: defaultbrowser dia
-  register: browser_result
+  register: osx_settings_browser_result
   # defaultbrowser outputs the current state, so we can make this idempotent
   changed_when: "'already set' not in browser_result.stdout"
   failed_when:
     - browser_result.rc != 0
-    - "'unknown' in browser_result.stderr"
+    - "'unknown' in osx_settings_browser_result.stderr"

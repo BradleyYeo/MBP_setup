@@ -6,6 +6,7 @@
   environment:
     RUNZSH: 'no'
     CHSH: 'no'
+    KEEP_ZSHRC: 'yes'
 
 - name: Install zsh-syntax-highlighting plugin
   ansible.builtin.git:
@@ -19,9 +20,4 @@
     dest: ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
     depth: 1
 
-- name: Restore .zshrc symlink after Oh My Zsh installation
-  ansible.builtin.file:
-    src: "{{ dotfiles_dest }}/.zshrc"
-    dest: "~/.zshrc"
-    state: link
-    force: yes
+    

@@ -25,7 +25,7 @@
     # Using the robust absolute path we established earlier
     paths: "{{ lookup('env', 'HOME') }}/Documents/Wallpapers"
     patterns: "*.jpg,*.jpeg,*.png"
-  register: local_wallpapers
+  register: clone_repos_local_wallpapers
 
 - name: List all objects in the wallpapers bucket
   amazon.aws.s3_object_info:
@@ -34,7 +34,7 @@
     secret_key: "{{ vault_r2_secret_key }}"
     endpoint_url: https://{{ vault_account_id }}.r2.cloudflarestorage.com
     region: "auto"
-  register: r2_files
+  register: clone_repos_r2_files
 
 - name: Sync wallpapers from Object Storage
   amazon.aws.s3_object:
@@ -49,4 +49,5 @@
   loop: "{{ r2_files.s3_keys }}"
   loop_control:
     label: "{{ item }}"
-  when: local_wallpapers.matched != (r2_files.s3_keys | length)
+  when: clone_repos_local_wallpapers.matched != (clone_repos_r2_files.s3_keys | length)
+  
