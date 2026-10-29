@@ -1,4 +1,17 @@
 ---
+cli_tools_python_version: "3.15"
+cli_tools_python_legacy_version: "3.14"
+
+cli_tools_uv_tools:
+  - name: pre-commit
+    python: "{{ cli_tools_python_version }}"
+  - name: yamllint
+    python: "{{ cli_tools_python_version }}"
+  - name: ansible-core
+    python: "{{ cli_tools_python_legacy_version }}"
+  - name: ansible-lint
+    python: "{{ cli_tools_python_legacy_version }}"
+
 cli_tools_zsh_plugins:
   - name: zsh-syntax-highlighting
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git

@@ -1,4 +1,35 @@
 ---
+- name: Ensure latest Python version is installed via uv
+  ansible.builtin.command:
+    cmd: "uv python install {{ cli_tools_python_version }} --default"
+  register: cli_tools_uv_python_install
+  changed_when: "'Installed' in cli_tools_uv_python_install.stderr or 'Installed' in cli_tools_uv_python_install.stdout"
+
+- name: Ensure fallback Python version is installed via uv
+  ansible.builtin.command:
+    cmd: "uv python install {{ cli_tools_python_legacy_version }}"
+  register: cli_tools_uv_legacy_python_install
+  changed_when: "'Installed' in cli_tools_uv_legacy_python_install.stderr or 'Installed' in cli_tools_uv_legacy_python_install.stdout"
+
+- name: Ensure global Python version pin is set via uv
+  ansible.builtin.command:
+    cmd: "uv python pin --global {{ cli_tools_python_version }}"
+  register: cli_tools_uv_python_pin
+  changed_when: "'Pinned' in cli_tools_uv_python_pin.stderr or 'Pinned' in cli_tools_uv_python_pin.stdout"
+
+- name: Install global Python CLI tools via uv
+  ansible.builtin.command:
+    cmd: "uv tool install {{ item.name }} --python {{ item.python | default(cli_tools_python_version) }}"
+  loop: "{{ cli_tools_uv_tools }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: cli_tools_uv_tool_install
+  changed_when: >-
+    'Installed' in cli_tools_uv_tool_install.stderr or
+    'Updated' in cli_tools_uv_tool_install.stderr or
+    'Installed' in cli_tools_uv_tool_install.stdout or
+    'Updated' in cli_tools_uv_tool_install.stdout
+
 - name: Install Oh My Zsh
   ansible.builtin.shell:
     cmd: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
