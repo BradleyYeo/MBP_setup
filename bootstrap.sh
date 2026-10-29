@@ -28,35 +28,21 @@ if ! command -v brew &>/dev/null; then
 fi
 
 
-# 2. Install Pyenv -> Python -> Ansible
-if ! command -v pyenv &>/dev/null; then
-  echo "Installing pyenv via Homebrew..."
-  brew install pyenv
+# 2. Install uv -> Python -> Virtualenv + Ansible dependencies
+if ! command -v uv &>/dev/null; then
+  echo "Installing uv via Homebrew..."
+  brew install uv
 fi
 
-# Configure pyenv for the current script session
-export PYENV_ROOT="$HOME/.pyenv"
-eval "$(pyenv init -)"
+echo "Syncing Python $(tr -d '[:space:]' < .python-version) and controller dependencies via uv..."
+uv sync --locked
 
-PYTHON_VERSION=$(cat .python-version | tr -d '[:space:]')
-if ! pyenv versions --bare | grep -q "^${PYTHON_VERSION}$"; then
-  echo "Installing Python ${PYTHON_VERSION} via pyenv..."
-  pyenv install "${PYTHON_VERSION}"
-fi
-# Create local virtualenv if missing
-if [ ! -d ".venv" ]; then
-  echo "Creating virtual environment in .venv..."
-  "$(pyenv prefix "${PYTHON_VERSION}")/bin/python" -m venv .venv
-fi
-# Install controller dependencies
-echo "Installing controller dependencies from requirements.txt..."
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/pip install -r requirements.txt
 # 3. Install required Ansible roles and collections
 echo "Installing Ansible requirements..."
-.venv/bin/ansible-galaxy install -r requirements.yml
+uv run --locked ansible-galaxy install -r requirements.yml
+
 # 4. Run the Ansible playbook
 echo "Running the Ansible playbook..."
-.venv/bin/ansible-playbook main.yml --ask-become-pass "$@"
+uv run --locked ansible-playbook main.yml --ask-become-pass "$@"
 
 echo "Setup complete!"
