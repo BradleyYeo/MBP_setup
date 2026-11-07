@@ -1,7 +1,7 @@
 ---
 - name: Check if Brewfile dependencies are satisfied
   ansible.builtin.command:
-    cmd: brew bundle check --file="{{ homebrew_brewfile }}" --no-upgrade
+    cmd: brew bundle check --file="{{ homebrew_brewfile }}"
   register: homebrew_bundle_check
   changed_when: false
   failed_when: false
@@ -13,7 +13,7 @@
 
 - name: Install dependencies from Brewfile
   ansible.builtin.command:
-    cmd: brew bundle install --file="{{ homebrew_brewfile }}" --no-upgrade
+    cmd: brew bundle install --file="{{ homebrew_brewfile }}"
   when: homebrew_bundle_check.rc != 0
   changed_when: true
   environment:

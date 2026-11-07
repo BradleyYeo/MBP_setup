@@ -1,21 +1,23 @@
 ---
 argument_specs:
   main:
-    short_description: Clone and symlink user dotfiles
+    short_description: Manage user dotfiles via Git bare repository
     description:
-      - Clones personal dotfiles repository and symlinks configuration files to user home directory.
+      - Clones and updates personal dotfiles bare repository and checks out tracked files into user home directory without symlinks.
     options:
       dotfiles_repo:
         type: str
         required: false
         description: URL of the remote dotfiles repository.
-      dotfiles_dest:
+      dotfiles_repo_dir:
         type: path
         required: false
-        description: Local directory where the dotfiles repository is cloned.
-      dotfiles_files:
-        type: list
-        elements: str
+        description: Local bare repository directory path.
+      dotfiles_home:
+        type: path
         required: false
-        description: List of dotfile paths to symlink from the repository into user home directory.
-
+        description: Target work-tree directory where dotfiles are checked out.
+      dotfiles_version:
+        type: str
+        required: false
+        description: Git branch, tag, or commit to track.

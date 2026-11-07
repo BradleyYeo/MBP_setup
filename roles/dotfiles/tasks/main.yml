@@ -1,21 +1,75 @@
 ---
-- name: Clone dotfiles repository
+- name: Clone and update bare dotfiles repository # noqa: latest[git]
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
-    dest: "{{ dotfiles_dest }}"
-    version: main
-    update: false
+    dest: "{{ dotfiles_repo_dir }}"
+    bare: true
+    version: "{{ dotfiles_version }}"
+    update: true
+  register: dotfiles_git_sync
 
-- name: Inspect existing dotfile destinations
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
-  register: dotfiles_stat
-  loop: "{{ dotfiles_files }}"
+- name: Hide untracked files in bare dotfiles repository
+  community.general.git_config:
+    name: status.showUntrackedFiles
+    value: "no"
+    scope: local
+    repo: "{{ dotfiles_repo_dir }}"
+  when: not ansible_check_mode
 
-- name: Create dotfile symlinks
+- name: Find legacy top-level symlinks in target home directory
+  ansible.builtin.find:
+    paths: "{{ dotfiles_home }}"
+    depth: 1
+    hidden: true
+    file_type: link
+  register: dotfiles_legacy_links
+
+- name: Remove legacy dotfile symlinks
   ansible.builtin.file:
-    src: "{{ dotfiles_dest }}/{{ item }}"
-    dest: "{{ ansible_facts['user_dir'] }}/{{ item }}"
-    state: link
-    force: true
-  loop: "{{ dotfiles_files }}"
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ dotfiles_legacy_links.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Check bare dotfiles working tree status # noqa: command-instead-of-module
+  ansible.builtin.command:
+    cmd: >-
+      git --git-dir="{{ dotfiles_repo_dir }}"
+      --work-tree="{{ dotfiles_home }}"
+      status --porcelain --untracked-files=no
+  register: dotfiles_worktree_status
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: List tracked files modified in target home directory # noqa: command-instead-of-module
+  ansible.builtin.command:
+    cmd: >-
+      git --git-dir="{{ dotfiles_repo_dir }}"
+      --work-tree="{{ dotfiles_home }}"
+      diff --name-only --diff-filter=M "{{ dotfiles_version }}"
+  register: dotfiles_modified_files
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: dotfiles_worktree_status.stdout | length > 0
+
+- name: Back up conflicting regular dotfiles before checkout
+  ansible.builtin.copy:
+    src: "{{ dotfiles_home }}/{{ item }}"
+    dest: "{{ dotfiles_home }}/{{ item }}.backup"
+    remote_src: true
+    mode: preserve
+    force: false
+  loop: "{{ dotfiles_modified_files.stdout_lines | default([]) }}"
+  when: dotfiles_modified_files.stdout_lines is defined
+
+- name: Check out dotfiles into target home directory # noqa: command-instead-of-module
+  ansible.builtin.command:
+    cmd: >-
+      git --git-dir="{{ dotfiles_repo_dir }}"
+      --work-tree="{{ dotfiles_home }}"
+      checkout -f "{{ dotfiles_version }}"
+  when: dotfiles_git_sync is changed or (dotfiles_worktree_status.stdout | length > 0)
+  changed_when: true

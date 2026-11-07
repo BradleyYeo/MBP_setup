@@ -1,12 +1,5 @@
 ---
 dotfiles_repo: https://github.com/BradleyYeo/dotfiles.git
-dotfiles_dest: "{{ ansible_facts['user_dir'] }}/dotfiles"
-dotfiles_files:
-  - .zshrc
-  - .gitignore
-  - .gitconfig
-  - .githelpers
-  - .inputrc
-  - .macos
-  - .vimrc
-  - .aerospace.toml
+dotfiles_repo_dir: "{{ ansible_facts['user_dir'] }}/.dotfiles.git"
+dotfiles_home: "{{ ansible_facts['user_dir'] }}"
+dotfiles_version: main
