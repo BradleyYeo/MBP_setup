@@ -1,0 +1,41 @@
+---
+- name: Load encrypted secrets
+  ansible.builtin.include_vars:
+    file: vars/secrets.yml
+
+- name: Create wallpapers directory
+  ansible.builtin.file:
+    path: "{{ wallpapers_dest }}"
+    state: directory
+    mode: "0755"
+
+- name: Count local wallpapers
+  ansible.builtin.find:
+    paths: "{{ wallpapers_dest }}"
+    patterns: "*.jpg,*.jpeg,*.png"
+  register: wallpapers_local_wallpapers
+
+- name: List all objects in the wallpapers bucket
+  amazon.aws.s3_object_info:
+    bucket_name: "{{ wallpapers_bucket }}"
+    access_key: "{{ vault_r2_access_key }}"
+    secret_key: "{{ vault_r2_secret_key }}"
+    endpoint_url: "https://{{ vault_account_id }}.r2.cloudflarestorage.com"
+    region: auto
+  register: wallpapers_r2_files
+
+- name: Sync wallpapers from Object Storage
+  amazon.aws.s3_object:
+    bucket: "{{ wallpapers_bucket }}"
+    object: "{{ item }}"
+    dest: "{{ wallpapers_dest }}/{{ item }}"
+    mode: get
+    access_key: "{{ vault_r2_access_key }}"
+    secret_key: "{{ vault_r2_secret_key }}"
+    endpoint_url: "https://{{ vault_account_id }}.r2.cloudflarestorage.com"
+    region: auto
+  loop: "{{ wallpapers_r2_files.s3_keys }}"
+  loop_control:
+    label: "{{ item }}"
+  when: wallpapers_local_wallpapers.matched != (wallpapers_r2_files.s3_keys | length)
+

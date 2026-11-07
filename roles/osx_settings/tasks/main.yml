@@ -30,7 +30,7 @@
   ansible.builtin.command: defaultbrowser dia
   register: osx_settings_browser_result
   # defaultbrowser outputs the current state, so we can make this idempotent
-  changed_when: "'already set' not in browser_result.stdout"
+  changed_when: "'already set' not in osx_settings_browser_result.stdout"
   failed_when:
-    - browser_result.rc != 0
+    - osx_settings_browser_result.rc != 0
     - "'unknown' in osx_settings_browser_result.stderr"

@@ -1,4 +1,12 @@
 ---
 argument_specs:
   main:
-    short_description: Clone Obsidian notes and Wallpapers
+    short_description: Clone Git workspace repositories
+    description:
+      - Clones personal and work Git repositories into local workspace directories.
+    options:
+      clone_repos_github:
+        type: list
+        elements: dict
+        required: false
+        description: List of repository entries containing repository URLs and local destination directories.

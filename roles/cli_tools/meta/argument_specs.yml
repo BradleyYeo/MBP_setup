@@ -1,0 +1,26 @@
+---
+argument_specs:
+  main:
+    short_description: Install Python versions, CLI utilities, and Zsh plugins
+    description:
+      - Installs managed Python versions and global CLI tools via uv, and installs Oh My Zsh plugins.
+    options:
+      cli_tools_python_version:
+        type: str
+        required: false
+        description: Primary default Python version to install and pin globally.
+      cli_tools_python_legacy_version:
+        type: str
+        required: false
+        description: Secondary fallback Python version for older tools.
+      cli_tools_uv_tools:
+        type: list
+        elements: dict
+        required: false
+        description: List of CLI tool definitions to install via uv tool.
+      cli_tools_zsh_plugins:
+        type: list
+        elements: dict
+        required: false
+        description: List of custom Zsh plugins to clone for Oh My Zsh.
+

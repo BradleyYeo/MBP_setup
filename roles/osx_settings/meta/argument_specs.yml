@@ -1,0 +1,7 @@
+---
+argument_specs:
+  main:
+    short_description: Configure macOS system settings and preferences
+    description:
+      - Applies macOS system defaults and configures default browser settings.
+

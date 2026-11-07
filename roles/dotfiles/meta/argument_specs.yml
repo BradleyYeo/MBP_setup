@@ -1,0 +1,21 @@
+---
+argument_specs:
+  main:
+    short_description: Clone and symlink user dotfiles
+    description:
+      - Clones personal dotfiles repository and symlinks configuration files to user home directory.
+    options:
+      dotfiles_repo:
+        type: str
+        required: false
+        description: URL of the remote dotfiles repository.
+      dotfiles_dest:
+        type: path
+        required: false
+        description: Local directory where the dotfiles repository is cloned.
+      dotfiles_files:
+        type: list
+        elements: str
+        required: false
+        description: List of dotfile paths to symlink from the repository into user home directory.
+

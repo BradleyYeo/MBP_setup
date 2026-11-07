@@ -5,7 +5,21 @@
 
   roles:
     - role: homebrew
+      tags:
+        - homebrew
     - role: dotfiles
+      tags:
+        - dotfiles
     - role: clone_repos
+      tags:
+        - clone_repos
+        - repos
+    - role: wallpapers
+      tags:
+        - wallpapers
     - role: cli_tools
+      tags:
+        - cli_tools
     - role: osx_settings
+      tags:
+        - osx_settings

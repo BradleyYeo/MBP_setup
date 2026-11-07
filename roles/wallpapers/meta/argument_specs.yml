@@ -1,0 +1,16 @@
+---
+argument_specs:
+  main:
+    short_description: Sync wallpapers from Cloudflare R2 object storage
+    description:
+      - Syncs desktop wallpaper images from a Cloudflare R2 bucket to the local filesystem.
+    options:
+      wallpapers_dest:
+        type: path
+        required: false
+        description: Target directory on the local system where wallpapers are stored.
+      wallpapers_bucket:
+        type: str
+        required: false
+        description: Cloudflare R2 bucket name containing wallpaper images.
+

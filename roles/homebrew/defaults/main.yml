@@ -1,0 +1,4 @@
+---
+homebrew_brewfile: "{{ playbook_dir }}/Brewfile"
+homebrew_cleanup: false
+
