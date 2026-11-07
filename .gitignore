@@ -1,7 +1,11 @@
-# Ansible specific
+# Ansible & Molecule
 *.retry
 *.pyc
+*.tar.gz
 .ansible/
+.molecule/
+.cache/
+collections/
 
 # OS generated files
 .DS_Store
@@ -12,10 +16,7 @@
 ehthumbs.db
 Thumbs.db
 
-# Ignore specifically downloaded third-party roles (DO NOT ignore your custom ones)
+# Local environment & study notes
 .env
 .venv/
-
 EXERCISES.md
-collections/
-galaxy_roles/

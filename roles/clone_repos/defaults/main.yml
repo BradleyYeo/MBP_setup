@@ -7,3 +7,6 @@ clone_repos_github:
   - repo: "https://github.com/BradleyYeo/Work.git"
     dest: "{{ ansible_facts['user_dir'] }}/Documents/Work"
     version: main
+  - repo: "https://github.com/BradleyYeo/csapp3e-brad.git"
+    dest: "{{ ansible_facts['user_dir'] }}/Documents/Learn/csapp3e-brad"
+    version: main

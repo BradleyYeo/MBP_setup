@@ -1,72 +1,69 @@
 # MacBook Setup
 
-This repository provides an automated, idempotent setup pipeline for a macOS system leveraging Ansible to drive configuration, dotfile management, and system dependencies.
+Automated, convergent macOS workstation setup powered by Ansible, Homebrew Bundle, `uv`, and a zero-symlink Git Bare Repository for dotfiles.
 
 ## Architecture & Principles
-Designed following core system architecture principles:
-- **Isolated Environments**: Uses `uv` to manage standalone Python binaries, virtual environments, and controller dependencies (`pyproject.toml`, `uv.lock`) in local `.venv` rather than mutating system Python or Homebrew's global Python packages.
-- **Deterministic Layout**: Relies on a `Brewfile` processed via `brew bundle` for system CLI packages, casks, fonts, and developer tools.
-- **Decoupled Settings**: MacOS UI preferences (`osx_defaults`) are managed independently from application binaries.
-
-## Prerequisites
-- A fresh or existing macOS system.
-- Apple Command Line Tools (`xcode-select --install`).
-- An existing `~/dotfiles` repository (optional, but recommended if linking dotfiles).
-
-## Features
-- Automated Homebrew tooling and bundle installation
-- Python runtime and dependency isolation via `uv`
-- Ansible-managed symlinks connecting your GitHub dotfiles to `$HOME`
-- Strict `.gitignore` safeguarding local secrets
-- Structured roles covering Homebrew, dotfiles, repository workspaces, CLI tools, and macOS system preferences
+- **Unified Python 3.15 Runtime via `uv`**: Both the Ansible controller virtual environment (`.venv`) and global Python CLI utilities (`pre-commit`, `yamllint`, `ansible-core`, `ansible-lint`) run on Python `3.15` managed by `uv`.
+- **Single-Owner Package Management**: System formulae, GUI casks, VS Code extensions, and Go tools are declared in `Brewfile`; Python CLI tools are owned exclusively by `uv`.
+- **Zero-Symlink Dotfiles**: Dotfiles are managed via a Git Bare Repository at `~/.dotfiles.git` with `$HOME` as the working tree (`alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'`).
+- **Concept-Isolated Roles**: Six roles with explicit `meta/argument_specs.yml` contracts:
+  - `homebrew`: Homebrew Bundle convergence and package upgrades
+  - `dotfiles`: Git bare repository dotfile synchronization into `$HOME`
+  - `clone_repos`: Workspace repository cloning (`~/Documents/Personal`, `~/Documents/Work`)
+  - `wallpapers`: Cloudflare R2 wallpaper synchronization (`~/Documents/Wallpapers`)
+  - `cli_tools`: Python `3.15` runtime, global `uv` CLI tools, and Oh My Zsh plugins
+  - `osx_settings`: Declarative `osx_defaults` and default browser configuration
 
 ---
 
-## Setup Instructions
+## One-Time Prerequisites (Fresh MacBook)
+1. **Apple Command Line Tools**:
+   ```bash
+   xcode-select --install
+   ```
+2. **GitHub CLI Authentication** (required for cloning private workspace repositories):
+   ```bash
+   gh auth login
+   ```
+3. **Ansible Vault Secret** (required for Cloudflare R2 wallpaper synchronization).
 
-### Pre-Flight Backup (Optional)
-If you already have existing configs (such as `.zshrc`, `.aerospace.toml`) initialized in `$HOME` that you want to preserve before linking:
-```bash
-./backup_dotfiles.sh
-```
+---
 
-### Initialize the Bootstrap
-On the target machine, clone and execute the bootstrap script:
+## Bootstrap & Execution
+
+### Full Workstation Bootstrap
+Clone this repository and execute `bootstrap.sh`:
 ```bash
 git clone https://github.com/BradleyYeo/MBP_setup.git
 cd MBP_setup
 ./bootstrap.sh
 ```
 
-`bootstrap.sh` acts as the minimal environment builder. It will:
-- Install Homebrew if not already installed.
-- Install `uv` via Homebrew.
-- Provision the Python version specified in `.python-version` and sync dependencies via `uv sync --locked`.
-- Install Ansible collections via `uv run --locked ansible-galaxy install -r requirements.yml`.
-- Execute the playbook via `uv run --locked ansible-playbook main.yml --ask-become-pass "$@"`.
+`bootstrap.sh` performs the following steps:
+- Installs Homebrew if not already present on `/opt/homebrew/bin/brew` or `/usr/local/bin/brew`.
+- Installs `uv` via Homebrew.
+- Upgrades and locks controller dependencies on Python `3.15` (`uv lock --upgrade && uv sync --locked`).
+- Installs and upgrades required Ansible Galaxy collections (`uv run --locked ansible-galaxy install -r requirements.yml --force`).
+- Runs the playbook (`uv run --locked ansible-playbook main.yml --ask-become-pass "$@"`).
 
 ### Day-to-Day Operations
-Run Ansible tasks or quality checks using `uv run`:
 - Run the full playbook:
   ```bash
-  uv run ansible-playbook main.yml --ask-become-pass
+  uv run --locked ansible-playbook main.yml
   ```
-- Run dry-run check mode:
+- Run a dry-run preview (`--check --diff`):
   ```bash
-  uv run ansible-playbook main.yml --check --diff
+  uv run --locked ansible-playbook main.yml --check --diff
   ```
-- Run a specific role:
+- Converge a single role by tag (`homebrew`, `dotfiles`, `repos`, `wallpapers`, `cli_tools`, `osx_settings`):
   ```bash
-  uv run ansible-playbook main.yml --tags homebrew
+  uv run --locked ansible-playbook main.yml --tags dotfiles,cli_tools
   ```
-- Lint playbooks and roles:
+- Check dotfile status via the bare repository alias:
   ```bash
-  uv run ansible-lint
+  dotfiles status
   ```
-
-### Verify Configurations
-Once Ansible completes its run:
-- Open a new terminal to source updated environment variables and shell configurations.
-- Verify that command-line tools installed via Homebrew (`brew`, `git`, `uv`, etc.) operate successfully.
-- Verify symlinks in `$HOME` (such as `~/.zshrc`, `~/.aerospace.toml`) point to `~/dotfiles`.
-
+- Lint all playbooks and roles under the `production` profile:
+  ```bash
+  uv run --locked ansible-lint --profile production
+  ```

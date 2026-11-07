@@ -5,6 +5,21 @@
     state: directory
     mode: "0700"
 
+- name: Ensure repository parent directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop: >-
+    {{
+      clone_repos_github
+      | map(attribute='dest')
+      | map('dirname')
+      | reject('equalto', ansible_facts['user_dir'] ~ '/Documents')
+      | unique
+      | list
+    }}
+
 - name: Inspect existing repository destinations
   ansible.builtin.stat:
     path: "{{ item.dest }}"
