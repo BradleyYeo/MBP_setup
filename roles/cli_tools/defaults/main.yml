@@ -1,6 +1,7 @@
 ---
 cli_tools_python_version: "3.15"
 cli_tools_python_legacy_version: "3.14"
+homebrew_brewfile: "{{ playbook_dir }}/Brewfile"
 
 cli_tools_uv_tools:
   - name: pre-commit
