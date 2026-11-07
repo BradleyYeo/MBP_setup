@@ -1,6 +1,9 @@
+---
 # Repositories to clone
 clone_repos_github:
-  - repo: "BradleyYeo/Obsidian"
-    dest: "~/Documents/Personal"
-  - repo: "BradleyYeo/Work"
-    dest: "~/Documents/Work"
+  - repo: "https://github.com/BradleyYeo/Obsidian.git"
+    dest: "{{ ansible_facts['user_dir'] }}/Documents/Personal"
+    version: main
+  - repo: "https://github.com/BradleyYeo/Work.git"
+    dest: "{{ ansible_facts['user_dir'] }}/Documents/Work"
+    version: main

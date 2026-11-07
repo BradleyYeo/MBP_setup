@@ -9,4 +9,18 @@ argument_specs:
         type: list
         elements: dict
         required: false
-        description: List of repository entries containing repository URLs and local destination directories.
+        description: List of repository entries containing repository URLs, local destinations, and branch versions.
+        options:
+          repo:
+            type: str
+            required: true
+            description: Full Git clone URL (HTTPS or SSH) of the remote repository.
+          dest:
+            type: path
+            required: true
+            description: Target directory path where the repository should be cloned.
+          version:
+            type: str
+            required: false
+            default: main
+            description: Target branch, tag, or commit to check out.
