@@ -9,8 +9,3 @@ argument_specs:
         type: path
         required: false
         description: Path to the target Brewfile.
-      homebrew_cleanup:
-        type: bool
-        required: false
-        default: false
-        description: Whether to uninstall packages and casks not listed in the Brewfile.

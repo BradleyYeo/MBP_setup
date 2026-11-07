@@ -1,11 +1,30 @@
 ---
-- name: Install and Cleanup packages from Brewfile
-  ansible.builtin.command: brew bundle --file="{{ playbook_dir }}/Brewfile" --cleanup
-  register: homebrew_bundle_result
-  changed_when: "'Installing' in homebrew_bundle_result.stdout or 'Upgrading' in homebrew_bundle_result.stdout or 'Uninstalling' in homebrew_bundle_result.stdout"
+- name: Check if Brewfile dependencies are satisfied
+  ansible.builtin.command:
+    cmd: brew bundle check --file="{{ homebrew_brewfile }}" --no-upgrade
+  register: homebrew_bundle_check
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  environment:
+    HOMEBREW_NO_AUTO_UPDATE: "1"
+  tags:
+    - homebrew
 
-- name: Update and upgrade all homebrew packages
+- name: Install dependencies from Brewfile
+  ansible.builtin.command:
+    cmd: brew bundle install --file="{{ homebrew_brewfile }}" --no-upgrade
+  when: homebrew_bundle_check.rc != 0
+  changed_when: true
+  environment:
+    HOMEBREW_NO_AUTO_UPDATE: "1"
+  tags:
+    - homebrew
+
+- name: Update and upgrade all Homebrew packages
   community.general.homebrew:
-    update_homebrew: yes
-    upgrade_all: yes
-  when: homebrew_bundle_result is changed
+    update_homebrew: true
+    upgrade_all: true
+  tags:
+    - never
+    - upgrade
