@@ -34,12 +34,13 @@ if ! command -v uv &>/dev/null; then
   brew install uv
 fi
 
-echo "Syncing Python $(tr -d '[:space:]' < .python-version) and controller dependencies via uv..."
+echo "Syncing and upgrading Python $(tr -d '[:space:]' < .python-version) and controller dependencies via uv..."
+uv lock --upgrade
 uv sync --locked
 
 # 3. Install required Ansible roles and collections
-echo "Installing Ansible requirements..."
-uv run --locked ansible-galaxy install -r requirements.yml
+echo "Installing and upgrading Ansible requirements..."
+uv run --locked ansible-galaxy install -r requirements.yml --force
 
 # 4. Run the Ansible playbook
 echo "Running the Ansible playbook..."

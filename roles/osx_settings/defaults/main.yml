@@ -14,4 +14,3 @@ osx_settings_defaults:
     key: ScheduleFrequency
     type: int
     value: 1
-

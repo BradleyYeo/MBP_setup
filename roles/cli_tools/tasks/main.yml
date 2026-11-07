@@ -3,13 +3,31 @@
   ansible.builtin.command:
     cmd: "uv python install {{ cli_tools_python_version }} --default"
   register: cli_tools_uv_python_install
-  changed_when: "'Installed' in cli_tools_uv_python_install.stderr or 'Installed' in cli_tools_uv_python_install.stdout"
+  changed_when: >-
+    'Installed' in cli_tools_uv_python_install.stderr or
+    'Installed' in cli_tools_uv_python_install.stdout
+
+- name: Upgrade Python runtime to latest patch release via uv
+  ansible.builtin.command:
+    cmd: "uv python upgrade {{ cli_tools_python_version }}"
+  register: cli_tools_uv_python_upgrade
+  changed_when: >-
+    'Installed' in cli_tools_uv_python_upgrade.stderr or
+    'Upgraded' in cli_tools_uv_python_upgrade.stderr or
+    'Installed' in cli_tools_uv_python_upgrade.stdout or
+    'Upgraded' in cli_tools_uv_python_upgrade.stdout
+
+- name: Ensure uv configuration directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.config/uv"
+    state: directory
+    mode: "0755"
 
 - name: Ensure global Python version pin is set via uv
-  ansible.builtin.command:
-    cmd: "uv python pin --global {{ cli_tools_python_version }}"
-  register: cli_tools_uv_python_pin
-  changed_when: "'Pinned' in cli_tools_uv_python_pin.stderr or 'Pinned' in cli_tools_uv_python_pin.stdout"
+  ansible.builtin.copy:
+    content: "{{ cli_tools_python_version }}\n"
+    dest: "{{ ansible_facts['user_dir'] }}/.config/uv/.python-version"
+    mode: "0644"
 
 - name: Install global Python CLI tools via uv
   ansible.builtin.command:
@@ -18,23 +36,40 @@
   register: cli_tools_uv_tool_install
   changed_when: >-
     'Installed' in cli_tools_uv_tool_install.stderr or
-    'Updated' in cli_tools_uv_tool_install.stderr or
-    'Installed' in cli_tools_uv_tool_install.stdout or
-    'Updated' in cli_tools_uv_tool_install.stdout
+    'Installed' in cli_tools_uv_tool_install.stdout
+
+- name: Upgrade all global Python CLI tools via uv
+  ansible.builtin.command:
+    cmd: "uv tool upgrade --all --python {{ cli_tools_python_version }}"
+  register: cli_tools_uv_tool_upgrade
+  changed_when: >-
+    'Nothing to upgrade' not in (cli_tools_uv_tool_upgrade.stdout ~ cli_tools_uv_tool_upgrade.stderr)
 
 - name: Install Oh My Zsh
   ansible.builtin.shell:
-    cmd: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended'
-    creates: ~/.oh-my-zsh
+    cmd: |
+      set -o pipefail
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    executable: /bin/bash
+    creates: "{{ cli_tools_omz_dir }}"
   environment:
-    RUNZSH: 'no'
-    CHSH: 'no'
-    KEEP_ZSHRC: 'yes'
+    ZSH: "{{ cli_tools_omz_dir }}"
+    RUNZSH: "no"
+    CHSH: "no"
+    KEEP_ZSHRC: "yes"
 
-- name: Install zsh plugins
+- name: Remove redundant zsh-syntax-highlighting plugin
+  ansible.builtin.file:
+    path: "{{ cli_tools_omz_dir }}/custom/plugins/zsh-syntax-highlighting"
+    state: absent
+
+- name: Install and update Zsh plugins # noqa: latest[git]
   ansible.builtin.git:
     repo: "{{ item.repo }}"
-    dest: "~/.oh-my-zsh/custom/plugins/{{ item.name }}"
+    dest: "{{ cli_tools_omz_dir }}/custom/plugins/{{ item.name }}"
+    version: "{{ item.version | default('master') }}"
+    update: true
+    force: true
     depth: 1
   loop: "{{ cli_tools_zsh_plugins }}"
   loop_control:

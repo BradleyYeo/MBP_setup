@@ -1,5 +1,6 @@
 ---
 cli_tools_python_version: "3.15"
+cli_tools_omz_dir: "{{ ansible_facts['user_dir'] }}/.oh-my-zsh"
 
 cli_tools_uv_tools:
   - pre-commit
@@ -8,7 +9,6 @@ cli_tools_uv_tools:
   - ansible-lint
 
 cli_tools_zsh_plugins:
-  - name: zsh-syntax-highlighting
-    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
   - name: fast-syntax-highlighting
     repo: https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+    version: master

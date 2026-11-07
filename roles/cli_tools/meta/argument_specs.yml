@@ -3,19 +3,37 @@ argument_specs:
   main:
     short_description: Install Python versions, CLI utilities, and Zsh plugins
     description:
-      - Installs managed Python versions and global CLI tools via uv, and installs Oh My Zsh plugins.
+      - Installs and upgrades managed Python versions and global CLI tools via uv, and manages Oh My Zsh plugins.
     options:
       cli_tools_python_version:
         type: str
         required: false
-        description: Primary default Python version to install and pin globally.
+        description: Primary default Python version to install, upgrade, and pin globally.
+      cli_tools_omz_dir:
+        type: path
+        required: false
+        description: Installation directory for Oh My Zsh.
       cli_tools_uv_tools:
         type: list
         elements: str
         required: false
-        description: List of CLI tool package names to install via uv tool.
+        description: List of CLI tool package names to install and upgrade via uv tool.
       cli_tools_zsh_plugins:
         type: list
         elements: dict
         required: false
-        description: List of custom Zsh plugins to clone for Oh My Zsh.
+        description: List of custom Zsh plugins to clone and update for Oh My Zsh.
+        options:
+          name:
+            type: str
+            required: true
+            description: Directory name of the Zsh plugin under custom/plugins.
+          repo:
+            type: str
+            required: true
+            description: Git repository URL of the Zsh plugin.
+          version:
+            type: str
+            required: false
+            default: master
+            description: Git branch, tag, or commit to track.
