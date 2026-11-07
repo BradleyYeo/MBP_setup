@@ -9,18 +9,13 @@ argument_specs:
         type: str
         required: false
         description: Primary default Python version to install and pin globally.
-      cli_tools_python_legacy_version:
-        type: str
-        required: false
-        description: Secondary fallback Python version for older tools.
       cli_tools_uv_tools:
         type: list
-        elements: dict
+        elements: str
         required: false
-        description: List of CLI tool definitions to install via uv tool.
+        description: List of CLI tool package names to install via uv tool.
       cli_tools_zsh_plugins:
         type: list
         elements: dict
         required: false
         description: List of custom Zsh plugins to clone for Oh My Zsh.
-
