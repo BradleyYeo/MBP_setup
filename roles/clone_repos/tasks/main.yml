@@ -11,28 +11,20 @@
   register: clone_repos_dest_stat
   loop: "{{ clone_repos_github }}"
 
-- name: Probe repository access for uninitialized repositories
+- name: Verify GitHub CLI authentication status
   ansible.builtin.command:
-    cmd: "git ls-remote --exit-code {{ item.item.repo }} HEAD"
-  register: clone_repos_access_probe
+    cmd: gh auth status
+  register: clone_repos_gh_auth
   changed_when: false
   failed_when: false
   check_mode: false
-  loop: "{{ clone_repos_dest_stat.results }}"
-  when: not item.stat.exists
 
-- name: Assert repository access and authentication are configured
+- name: Assert GitHub credentials are configured
   ansible.builtin.assert:
     that:
-      - item.rc == 0
-    fail_msg: >-
-      Unable to access remote repository {{ item.item.item.repo }}.
-      Ensure your Git credentials (via 'gh auth login' or SSH public key) are configured and authorized.
-    success_msg: "Access verified for {{ item.item.item.repo }}"
-  loop: "{{ clone_repos_access_probe.results }}"
-  when:
-    - clone_repos_access_probe is defined
-    - item.skipped is not defined or not item.skipped
+      - clone_repos_gh_auth.rc == 0
+    fail_msg: "GitHub CLI is not authenticated. Run 'gh auth login' to authenticate before cloning private repositories."
+  when: clone_repos_dest_stat.results | rejectattr('stat.exists') | list | length > 0
 
 - name: Clone private repositories
   ansible.builtin.git:
