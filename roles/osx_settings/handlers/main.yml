@@ -1,5 +1,12 @@
 ---
 - name: Restart SystemUIServer
-  ansible.builtin.shell: killall SystemUIServer
-  ignore_errors: true
-  changed_when: false
+  ansible.builtin.command: killall SystemUIServer
+  register: osx_settings_killall_sysui
+  failed_when: osx_settings_killall_sysui.rc not in [0, 1]
+  changed_when: osx_settings_killall_sysui.rc == 0
+
+- name: Restart Finder
+  ansible.builtin.command: killall Finder
+  register: osx_settings_killall_finder
+  failed_when: osx_settings_killall_finder.rc not in [0, 1]
+  changed_when: osx_settings_killall_finder.rc == 0

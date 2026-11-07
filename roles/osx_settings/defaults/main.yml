@@ -1,0 +1,17 @@
+---
+osx_settings_default_browser: dia
+
+osx_settings_defaults:
+  - domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: true
+  - domain: com.apple.LaunchServices
+    key: LSQuarantine
+    type: bool
+    value: false
+  - domain: com.apple.SoftwareUpdate
+    key: ScheduleFrequency
+    type: int
+    value: 1
+

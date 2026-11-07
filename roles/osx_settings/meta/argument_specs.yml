@@ -4,4 +4,39 @@ argument_specs:
     short_description: Configure macOS system settings and preferences
     description:
       - Applies macOS system defaults and configures default browser settings.
-
+    options:
+      osx_settings_default_browser:
+        type: str
+        required: false
+        default: dia
+        description: Name of the default web browser to configure.
+      osx_settings_defaults:
+        type: list
+        elements: dict
+        required: false
+        description: List of macOS domain preferences to configure.
+        options:
+          domain:
+            type: str
+            required: true
+            description: macOS domain (e.g. NSGlobalDomain, com.apple.LaunchServices).
+          key:
+            type: str
+            required: true
+            description: Preference key within the domain.
+          type:
+            type: str
+            required: true
+            choices:
+              - bool
+              - int
+              - float
+              - string
+              - date
+              - array
+              - dict
+            description: Type of the preference value.
+          value:
+            type: raw
+            required: true
+            description: Value to set for the preference key.

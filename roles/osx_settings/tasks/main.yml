@@ -1,36 +1,23 @@
 ---
-- name: Show all filename extensions
+- name: Configure macOS defaults
   community.general.osx_defaults:
-    domain: NSGlobalDomain
-    key: AppleShowAllExtensions
-    type: bool
-    value: true
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
     state: present
-  notify: Restart SystemUIServer
+  loop: "{{ osx_settings_defaults }}"
+  notify:
+    - Restart SystemUIServer
+    - Restart Finder
 
-- name: Disable the "Are you sure you want to open this application?" dialog
-  community.general.osx_defaults:
-    domain: com.apple.LaunchServices
-    key: LSQuarantine
-    type: bool
-    value: false
-    state: present
-  notify: Restart SystemUIServer
+- name: Query current default browser
+  ansible.builtin.command: defaultbrowser
+  register: osx_settings_current_browser
+  changed_when: false
+  check_mode: false
 
-- name: Check for software updates daily
-  community.general.osx_defaults:
-    domain: com.apple.SoftwareUpdate
-    key: ScheduleFrequency
-    type: int
-    value: 1
-    state: present
-  notify: Restart SystemUIServer
-
-- name: Set Dia as the default browser
-  ansible.builtin.command: defaultbrowser dia
-  register: osx_settings_browser_result
-  # defaultbrowser outputs the current state, so we can make this idempotent
-  changed_when: "'already set' not in osx_settings_browser_result.stdout"
-  failed_when:
-    - osx_settings_browser_result.rc != 0
-    - "'unknown' in osx_settings_browser_result.stderr"
+- name: Set default browser
+  ansible.builtin.command: "defaultbrowser {{ osx_settings_default_browser }}"
+  when: ("* " ~ (osx_settings_default_browser | trim)) not in (osx_settings_current_browser.stdout_lines | map('trim') | list)
+  changed_when: true
